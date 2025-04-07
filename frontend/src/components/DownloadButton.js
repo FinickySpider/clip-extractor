@@ -22,8 +22,9 @@ function DownloadButton({ youtubeUrl, startTime, endTime }) {
           : `${String(mins).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
       };
 
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
       const response = await axios.post(
-        "http://localhost:8000/download",
+        `${backendUrl}/download`,
         {
           url: youtubeUrl,
           startTime: secondsToHHMMSS(startTime),

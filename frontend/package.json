@@ -1,6 +1,7 @@
 {
   "name": "clip-extractor-frontend",
   "version": "1.0.0",
+  "homepage": "https://eisendatabase.com/clip-extractor",
   "private": true,
   "dependencies": {
     "react": "^18.0.0",

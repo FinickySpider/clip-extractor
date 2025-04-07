@@ -6,9 +6,10 @@ from utils import download_clip
 
 app = FastAPI()
 
+# Update allowed origins to include both http and https for your frontend domain.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=["http://eisendatabase.com", "https://eisendatabase.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
