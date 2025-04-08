@@ -41,7 +41,7 @@ function App() {
     <Container maxWidth="md">
       <Box my={4}>
         <Typography variant="h4" gutterBottom>
-          Clip Extraction Interface
+          Youtube Clip Extractor
         </Typography>
 
         <URLInput youtubeUrl={youtubeUrl} setYoutubeUrl={setYoutubeUrl} />
