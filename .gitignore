@@ -7,3 +7,10 @@ dist/
 build/
 *.mp4
 .vscode/
+*.ahk
+frontend/*.py
+frontend/Build.bat
+frontend/package-main.json
+frontend/package-test.json
+frontend/py-build.bat
+ftp_backup/
