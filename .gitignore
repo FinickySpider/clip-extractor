@@ -14,3 +14,6 @@ frontend/package-main.json
 frontend/package-test.json
 frontend/py-build.bat
 ftp_backup/
+frontend/py-quick-build - Test.bat
+backup-test/
+.util-backups/
