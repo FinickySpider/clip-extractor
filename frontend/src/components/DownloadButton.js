@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, CircularProgress, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, CircularProgress, Box, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
 import axios from 'axios';
 
 function DownloadButton({ youtubeUrl, startTime, endTime }) {
@@ -50,26 +50,30 @@ function DownloadButton({ youtubeUrl, startTime, endTime }) {
 
   return (
     <Box mt={2}>
-      <FormControl variant="outlined" style={{ minWidth: 200, marginRight: 16 }}>
-        <InputLabel id="download-format-label">Download Format</InputLabel>
-        <Select
-          labelId="download-format-label"
-          value={downloadFormat}
-          onChange={(e) => setDownloadFormat(e.target.value)}
-          label="Download Format"
-        >
-          <MenuItem value="Mp4">Video - Mp4</MenuItem>
-          <MenuItem value="Webm">Video - Webm</MenuItem>
-          <MenuItem value="Mp3">Audio - Mp3</MenuItem>
-          <MenuItem value="M4a">Audio - M4a</MenuItem>
-          <MenuItem value="Vorbis">Audio - Vorbis</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Button variant="contained" color="secondary" onClick={handleDownload} disabled={!youtubeUrl}>
-        Process & Download Clip
-      </Button>
-
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel id="download-format-label">Download Format</InputLabel>
+            <Select
+              labelId="download-format-label"
+              value={downloadFormat}
+              onChange={(e) => setDownloadFormat(e.target.value)}
+              label="Download Format"
+            >
+              <MenuItem value="Mp4">Video - Mp4</MenuItem>
+              <MenuItem value="Webm">Video - Webm</MenuItem>
+              <MenuItem value="Mp3">Audio - Mp3</MenuItem>
+              <MenuItem value="M4a">Audio - M4a</MenuItem>
+              <MenuItem value="Vorbis">Audio - Vorbis</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Button fullWidth variant="contained" color="secondary" onClick={handleDownload} disabled={!youtubeUrl}>
+            Process & Download Clip
+          </Button>
+        </Grid>
+      </Grid>
       {loading && (
         <Box mt={2} display="flex" alignItems="center">
           <CircularProgress size={24} />

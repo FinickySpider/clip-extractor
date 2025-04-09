@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField } from '@mui/material';
 
 const parseTime = (timeStr) => {
-  // parse "MM:SS" or "HH:MM:SS" into seconds
   const parts = timeStr.split(':').map(Number);
   if (parts.length === 2) {
     const [m, s] = parts;
@@ -56,19 +55,20 @@ function TimeControls({ startTime, endTime, setStartTime, setEndTime }) {
   };
 
   return (
-    <Box display="flex" justifyContent="space-between" my={2}>
+    <Box display="flex" justifyContent="space-around" my={2}>
       <TextField
         label="Start Time (HH:MM or HH:MM:SS)"
         variant="outlined"
         value={startInput}
         onChange={handleStartChange}
-        style={{ marginRight: 10 }}
+        helperText="Format: 00:00 or 00:00:00"
       />
       <TextField
         label="End Time (HH:MM or HH:MM:SS)"
         variant="outlined"
         value={endInput}
         onChange={handleEndChange}
+        helperText="Format: 00:00 or 00:00:00"
       />
     </Box>
   );

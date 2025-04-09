@@ -16,6 +16,14 @@ function SliderControl({ videoDuration, startTime, endTime, setStartTime, setEnd
         min={0}
         max={videoDuration}
         step={0.1}
+        sx={{
+          '& .MuiSlider-rail': {
+            backgroundColor: 'grey.700',
+          },
+          '& .MuiSlider-track': {
+            backgroundColor: 'primary.main',
+          }
+        }}
       />
     </Box>
   );

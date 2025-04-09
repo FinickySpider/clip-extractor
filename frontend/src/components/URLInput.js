@@ -13,6 +13,7 @@ function URLInput({ youtubeUrl, setYoutubeUrl }) {
       fullWidth
       value={youtubeUrl}
       onChange={handleChange}
+      placeholder="Enter a YouTube URL"
       margin="normal"
     />
   );
