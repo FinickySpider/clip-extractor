@@ -3,6 +3,7 @@ import os
 import re
 import json
 import time
+import hashlib
 
 # Determine the absolute path to yt-dlp in the virtual environment.
 YTDLP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "venv", "bin", "yt-dlp")
@@ -50,6 +51,11 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
         title = get_video_title(url)
         safe_title = sanitize_filename(title)
         
+        # Create a unique identifier for this specific clip using parameters
+        clip_params = f"{url}_{start_time}_{end_time}_{download_format}"
+        clip_hash = hashlib.md5(clip_params.encode()).hexdigest()[:8]
+        unique_filename = f"{safe_title}_{start_time.replace(':', '-')}_{end_time.replace(':', '-')}_{clip_hash}"
+        
         # Use a fixed temporary directory inside the project directory.
         temp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp")
         os.makedirs(temp_dir, exist_ok=True)
@@ -67,7 +73,7 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
                 output_ext = "webm"
                 format_string = "bestvideo[ext=webm][codec!=av01]+bestaudio/best"
             
-            output_template = os.path.join(temp_dir, f"{safe_title}.{output_ext}")
+            output_template = os.path.join(temp_dir, f"{unique_filename}.{output_ext}")
             command = [
                 YTDLP_PATH,
                 "--no-part",
@@ -93,7 +99,7 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
         
         elif download_format in ["Mp3", "M4a", "Vorbis"]:
             audio_format = download_format.lower()  # "mp3", "m4a", "vorbis"
-            output_template = os.path.join(temp_dir, f"{safe_title}.{audio_format}")
+            output_template = os.path.join(temp_dir, f"{unique_filename}.{audio_format}")
             command = [
                 YTDLP_PATH,
                 "--no-part",
@@ -115,13 +121,20 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
         # Optional: wait a moment for file creation
         time.sleep(1)
         
-        files = os.listdir(temp_dir)
-        matching_files = [file for file in files if file.endswith(f".{output_ext}")]
-        if not matching_files:
-            raise Exception(f"Clip file not found. Files in temp dir: {files}. Command stderr: {result.stderr}")
+        # Look for the specific file we expect to be created
+        expected_filename = f"{unique_filename}.{output_ext}"
+        clip_path = os.path.join(temp_dir, expected_filename)
         
-        clip_path = os.path.join(temp_dir, matching_files[0])
-        final_filename = matching_files[0]
+        if not os.path.exists(clip_path):
+            # Fallback: look for any file that matches our unique filename pattern
+            files = os.listdir(temp_dir)
+            matching_files = [file for file in files if file.startswith(unique_filename) and file.endswith(f".{output_ext}")]
+            if not matching_files:
+                raise Exception(f"Clip file not found. Expected: {expected_filename}. Files in temp dir: {files}. Command stderr: {result.stderr}")
+            clip_path = os.path.join(temp_dir, matching_files[0])
+            expected_filename = matching_files[0]
+        
+        final_filename = expected_filename
         return clip_path, final_filename
     
     except Exception as e:
