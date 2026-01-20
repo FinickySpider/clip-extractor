@@ -37,7 +37,18 @@ function DownloadButton({ youtubeUrl, startTime, endTime }) {
       const urlBlob = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = urlBlob;
-      link.setAttribute('download', `clip.${downloadFormat.toLowerCase()}`);
+      
+      // Use the filename from the backend response headers, fallback to default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = `clip.${downloadFormat.toLowerCase()}`;
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1].replace(/['"]/g, '');
+        }
+      }
+      
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       link.remove();
