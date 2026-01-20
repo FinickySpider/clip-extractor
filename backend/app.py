@@ -9,7 +9,11 @@ app = FastAPI()
 # Update allowed origins to include both http and https for your frontend domain.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://eisendatabase.com", "https://eisendatabase.com"],
+    allow_origins=[
+        "http://eisendatabase.com",
+        "https://eisendatabase.com",
+        "https://youtube-cutter-769dd0513e22.herokuapp.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
