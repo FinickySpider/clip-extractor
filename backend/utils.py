@@ -34,7 +34,13 @@ def get_video_title(url: str) -> str:
     Fallback to "clip" if any error occurs.
     """
     try:
-        cmd = [YTDLP_PATH, "--extractor-args", "youtube:player_client=web", "--dump-single-json", url]
+        cmd = [
+            YTDLP_PATH,
+            "--extractor-args", "youtube:player_client=android,web",
+            "--no-check-certificates",
+            "--dump-single-json",
+            url
+        ]
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode == 0:
             data = json.loads(result.stdout)
@@ -87,7 +93,8 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
             output_template = os.path.join(temp_dir, f"{unique_filename}.{output_ext}")
             command = [
                 YTDLP_PATH,
-                "--extractor-args", "youtube:player_client=web",
+                "--extractor-args", "youtube:player_client=android,web",
+                "--no-check-certificates",
                 "--no-part",
                 "--restrict-filenames",
                 "--format", format_string,
@@ -114,7 +121,8 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
             output_template = os.path.join(temp_dir, f"{unique_filename}.{audio_format}")
             command = [
                 YTDLP_PATH,
-                "--extractor-args", "youtube:player_client=web",
+                "--extractor-args", "youtube:player_client=android,web",
+                "--no-check-certificates",
                 "--no-part",
                 "--restrict-filenames",
                 "--format", "bestaudio/best",
