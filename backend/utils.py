@@ -4,8 +4,19 @@ import re
 import json
 import time
 
-# Determine the absolute path to yt-dlp in the virtual environment.
-YTDLP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "venv", "bin", "yt-dlp")
+# Determine the absolute path to yt-dlp.
+# On Heroku, yt-dlp will be installed globally and available in PATH.
+# For local development, it may be in the virtual environment.
+def get_ytdlp_path():
+    # First try system-wide installation (Heroku)
+    from shutil import which
+    system_ytdlp = which("yt-dlp")
+    if system_ytdlp:
+        return system_ytdlp
+    # Fallback to venv location (local development)
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "venv", "bin", "yt-dlp")
+
+YTDLP_PATH = get_ytdlp_path()
 
 def sanitize_filename(name: str) -> str:
     """
@@ -115,13 +126,14 @@ def download_clip(url: str, start_time: str, end_time: str, download_format: str
         # Optional: wait a moment for file creation
         time.sleep(1)
         
-        files = os.listdir(temp_dir)
-        matching_files = [file for file in files if file.endswith(f".{output_ext}")]
-        if not matching_files:
-            raise Exception(f"Clip file not found. Files in temp dir: {files}. Command stderr: {result.stderr}")
+        # Instead of picking the newest file by modification time,
+        # we directly use the known output_template.
+        if not os.path.exists(output_template):
+            raise Exception(f"Clip file not created. Expected file: {output_template}. Command stderr: {result.stderr}")
         
-        clip_path = os.path.join(temp_dir, matching_files[0])
-        final_filename = matching_files[0]
+        clip_path = output_template
+        final_filename = os.path.basename(output_template)
+        
         return clip_path, final_filename
     
     except Exception as e:
