@@ -1,0 +1,8 @@
+{
+  "name": "youtube-cutter-backend",
+  "version": "1.0.0",
+  "description": "Node.js runtime for yt-dlp",
+  "engines": {
+    "node": "20.x"
+  }
+}
